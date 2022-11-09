@@ -1,0 +1,52 @@
+---
+common:
+  azure:
+    dns:
+      #! TODO: Resolve duplicate information below.  Left this way for simplicity for now.
+      config: '{"tenantId": "REDACTED","subscriptionId": "REDACTED","resourceGroup": "tkg-lab-dns","aadClientId": "REDACTED","aadClientSecret": "REDACTED"}'
+      resource_group: tkg-lab-dns
+      client_id: REDACTED
+      client_secret: REDACTED
+      subscription_id: REDACTED
+      tenant_id: REDACTED
+      hosted_zone: REDACTED
+  git:
+    url: https://dev.azure.com/doddatvmware/tap-lab/_git/gitops-platform
+    ref: origin/main
+  tap:
+    tanzunet:
+      username: REDACTED
+      password: REDACTED
+    registry:
+      host: REDACTED
+      username: REDACTED
+      password: REDACTED
+    org_name: Acme Co
+  repos:
+    http:
+      host: dev.azure.com
+      basic_auth_username: REDACTED
+      basic_auth_password: REDACTED
+  sso:
+    github:
+      #! following this guide: https://github.com/pivotal/docs-tap/pull/1535/files
+      client_id: REDACTED
+      client_secret: REDACTED
+  ca: |
+    -----BEGIN CERTIFICATE-----
+    REDACTED
+    -----END CERTIFICATE-----
+clusters:
+  #! this cluster is not documented in the readme, and is completely optional.  I use it as an alternative to multi-cluster for quick tests
+  full:
+    cluster_name: tap-full
+    enabled: false
+    catalog: https://dev.azure.com/doddatvmware/tap-lab/_git/software-catalog?path=/catalog-info.yaml
+    catalog_token: REDACTED
+    domain: dotnet-tap.tanzu-azure-lab.winterfell.fun
+    tap_gui:
+      allow_guest_access: true
+      azure_auth:
+        client_id: REDACTED
+        client_secret: REDACTED
+        tenant_id: REDACTED

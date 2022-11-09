@@ -1,0 +1,130 @@
+#@ load("@ytt:data", "data")
+#@ load("@ytt:yaml", "yaml")
+#@ load("@ytt:base64", "base64")
+
+---
+#@ def config():
+#! installed_for_vmware_internal_use: true
+profile: full
+ceip_policy_disclosed: true #! Installation fails if this is set to 'false'
+contour:
+  envoy:
+    service:
+      type: LoadBalancer
+learningcenter:
+  ingressSecret: 
+    secretName: learningcenter-cert-tls
+shared:
+  ingress_domain: #@ data.values.tap.domains.base
+appsso:
+  domain_template: "{{.Name}}.{{.Domain}}"
+api_auto_registration:
+  cluster_name: #@ data.values.tap.cluster_name
+tap_gui:
+  service_type: ClusterIP
+  tls:
+    namespace: tap-install
+    secretName: wildcard-cert-tls
+  app_config:
+    #@ if/end 'org_name' in data.values.tap.tap_gui:
+    organization:
+      name: #@ data.values.tap.tap_gui.org_name
+    auth:
+      allowGuestAccess: #@ data.values.tap.tap_gui.auth.allow_guest_access
+      environment: development
+      providers:
+        #@ if/end hasattr(data.values.tap.tap_gui.auth, "okta"):
+        okta:
+          development:
+            clientId: #@ data.values.tap.tap_gui.auth.okta.client_id
+            clientSecret: #@ data.values.tap.tap_gui.auth.okta.client_secret
+            audience: #@ data.values.tap.tap_gui.auth.okta.issuer_domain
+            authServerId: #@ data.values.tap.tap_gui.auth.okta.auth_server_id
+        #@ if/end hasattr(data.values.tap.tap_gui.auth, "github"):
+        github:
+          development:
+            clientId: #@ data.values.tap.tap_gui.auth.github.client_id
+            clientSecret: #@ data.values.tap.tap_gui.auth.github.client_secret
+        #@ if/end hasattr(data.values.tap.tap_gui.auth, "azure"):
+        microsoft:
+          development:
+            clientId: #@ data.values.tap.tap_gui.auth.azure.client_id
+            clientSecret: #@ data.values.tap.tap_gui.auth.azure.client_secret
+            tenantId: #@ data.values.tap.tap_gui.auth.azure.tenant_id
+    app:
+        baseUrl: #@ "https://{}".format(data.values.tap.domains.tapGui)
+    catalog:
+        locations:
+        - type: url
+          target: #@ data.values.tap.catalog
+    backend:
+        baseUrl: #@ "https://{}".format(data.values.tap.domains.tapGui)
+        cors:
+            origin: #@ "https://{}".format(data.values.tap.domains.tapGui)
+    integrations:
+      azure:
+      - host: dev.azure.com
+        token: #@ data.values.tap.catalog_token
+appliveview:
+  tls:
+    namespace: tap-install
+    secretName: wildcard-cert-tls
+metadata_store:
+  app_service_type: ClusterIP
+accelerator:
+  server:
+    service_type: LoadBalancer #! Explicitly setting this becuase because of sporatic issue with VS code plugin and the let's encrypt certificate when accessing via ingress
+  ingress:
+    enable_tls: true
+    include: true #! This should be able to be removed since I have shared.ingress_domain set above.  All others work, but for accelerator I had to explicitly set this
+  tls:
+    namespace: tap-install
+    secret_name: wildcard-cert-tls
+  managed_resources:
+    enable: true
+    git:
+      url: #@ data.values.git.url
+      ref: #@ data.values.git.ref
+      sub_path: clusters/view/app-contents/accelerators
+      secret_ref: git-creds
+buildservice:
+  kp_default_repository: #@ "{}/{}".format(data.values.tap.credentials.registry.host, data.values.tap.credentials.registry.repositories.buildService)
+  kp_default_repository_username: #@ data.values.tap.credentials.registry.username
+  kp_default_repository_password: #@ data.values.tap.credentials.registry.password
+  tanzunet_username: #@ data.values.tap.credentials.tanzuNet.username
+  tanzunet_password: #@ data.values.tap.credentials.tanzuNet.password
+supply_chain: basic
+ootb_supply_chain_basic:
+  registry:
+    server: #@ data.values.tap.credentials.registry.host
+    repository: #@ data.values.tap.credentials.registry.repositories.ootbSupplyChain
+  git_implementation: libgit2
+package_overlays:
+- name:  learningcenter
+  secrets:
+  - name: learningcenter-config-overlay
+- name: cnrs
+  secrets:
+  - name: cnrs-network-config-overlay
+  - name: cnrs-certmanager-config-overlay
+  - name: cnrs-features-config-overlay
+- name:  accelerator
+  secrets:
+  - name: accelerator-config-overlay
+excluded_packages:
+- image-policy-webhook.signing.apps.tanzu.vmware.com
+- contour.tanzu.vmware.com
+- cert-manager.tanzu.vmware.com
+#@ end
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: tap-values
+  namespace: tap-install
+  annotations:
+    kapp.k14s.io/change-rule: "delete after deleting tap"
+
+type: Opaque
+stringData:
+  values.yml: #@ yaml.encode(config())

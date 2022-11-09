@@ -1,0 +1,26 @@
+#@ load("@ytt:data", "data")
+
+apiVersion: kappctrl.k14s.io/v1alpha1
+kind: App
+metadata:
+  name: platform-svcs-gitops
+  namespace: tap-install
+  annotations:
+    kapp.k14s.io/change-group: tap-install-gitops/app
+    kapp.k14s.io/change-rule.1: "upsert after upserting tap-install-gitops/rbac"
+spec:
+  serviceAccountName: tap-install-gitops-sa
+  syncPeriod: 1m
+  fetch:
+  - git:
+      url: #@ data.values.common.git.url
+      ref: #@ data.values.common.git.ref
+      secretRef:
+        name: git-creds-carvel
+  template:
+  - ytt:
+      valuesFrom:
+      - secretRef:
+          name: tap-install-gitops
+  deploy:
+  - kapp: {}

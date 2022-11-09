@@ -1,0 +1,20 @@
+#@ load("@ytt:overlay", "overlay")
+#@overlay/match by=overlay.subset({"kind":"App", "metadata": {"name":"platform-svcs-gitops"}}),expects="1+"
+---
+spec:
+  template:
+  #@overlay/match by=overlay.all, expects="1+"
+  - ytt:
+      #@overlay/match missing_ok=True
+      paths: 
+        - clusters/full/config
+        - common/config/external-dns
+        - common/config/cert-manager
+        - common/config/contour
+        - common/config/tap/base
+        - common/config/tap/cnrs-overlays
+        - common/config/tap/learningcenter-overlays
+        - common/config/tap/accelerator-overlays
+        - common/config/tap/cartographer
+        - common/config/tds
+        - common/config/postgres

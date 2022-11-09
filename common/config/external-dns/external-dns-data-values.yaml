@@ -1,0 +1,42 @@
+
+#@ load("@ytt:data", "data")
+#@ load("@ytt:yaml", "yaml")
+---
+#@ def config():
+---
+
+namespace: #@ data.values.external_dns.target_namespace
+
+deployment:
+  args:
+    - --source=service
+    - --source=ingress
+    - --source=contour-httpproxy
+    - --policy=upsert-only
+    - --provider=azure
+    - #@ "--azure-resource-group=" + data.values.azure.dns.resource_group
+    - --registry=txt
+  volumeMounts:
+    - name: azure-config-file
+      mountPath: /etc/kubernetes
+      readOnly: true
+  volumes:
+    - name: azure-config-file
+      secret:
+        secretName: azure-config-file
+        items:
+          - key: external-dns-config.json
+            path: azure.json
+#@ end
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: external-dns-values
+  namespace: #@ data.values.external_dns.namespace
+  annotations:
+    kapp.k14s.io/change-rule: "delete after deleting external-dns"
+
+type: Opaque
+stringData:
+  values.yml: #@ yaml.encode(config())

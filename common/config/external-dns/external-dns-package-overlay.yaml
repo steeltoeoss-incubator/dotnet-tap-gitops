@@ -1,0 +1,25 @@
+
+#@ load("@ytt:data", "data")
+#@ load("@ytt:yaml", "yaml")
+
+#@ def azurednssecret():
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: azure-config-file
+  namespace: tanzu-system-service-discovery
+stringData:
+  external-dns-config.json: #@ data.values.azure.dns.config
+#@ end
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: azure-dns-secret-overlay
+  namespace: #@ data.values.external_dns.namespace
+  annotations:
+    kapp.k14s.io/change-rule: "delete after deleting tap"
+stringData:
+  othersecret.yaml: #@ yaml.encode(azurednssecret())

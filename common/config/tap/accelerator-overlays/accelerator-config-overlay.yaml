@@ -1,0 +1,23 @@
+#@ load("@ytt:yaml", "yaml")
+
+#@ def acceleratordependency():
+---
+apiVersion: secretgen.carvel.dev/v1alpha1
+kind: SecretImport
+metadata:
+  name: git-creds
+  namespace: accelerator-system
+spec:
+  fromNamespace: tap-install 
+#@ end
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: accelerator-config-overlay
+  namespace: tap-install
+  annotations:
+    kapp.k14s.io/change-rule: "delete after deleting tap"
+stringData:
+  accelerator-config-overlay.yaml: #@ yaml.encode(acceleratordependency())

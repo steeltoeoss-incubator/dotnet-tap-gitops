@@ -1,0 +1,10 @@
+apiVersion: accelerator.apps.tanzu.vmware.com/v1alpha1
+kind: Accelerator
+metadata:
+  name: dotnet-tsl-starter
+  namespace: default
+spec:
+  git:
+    url: https://github.com/macsux/dotnet-accelerator
+    ref:
+      branch: dev

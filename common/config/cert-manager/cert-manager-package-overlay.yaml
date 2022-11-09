@@ -1,0 +1,48 @@
+#@ load("@ytt:data", "data")
+#@ load("@ytt:yaml", "yaml")
+
+#@ def clusterissuer():
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: azure-dns-client-secret
+  namespace: cert-manager
+stringData:
+  client-secret: #@ data.values.azure.dns.client_secret
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-contour-cluster-issuer
+spec:
+  acme:
+    email: "platform-ops@pivotal.io"
+    privateKeySecretRef:
+      name: acme-account-key
+    server: https://acme-v02.api.letsencrypt.org/directory
+    #! server: https://acme-staging-v02.api.letsencrypt.org/directory
+    solvers:
+    - dns01:
+        azureDNS:
+          clientID: #@ data.values.azure.dns.client_id
+          clientSecretSecretRef:
+            name: azure-dns-client-secret
+            key: client-secret
+          subscriptionID: #@ data.values.azure.dns.subscription_id
+          tenantID: #@ data.values.azure.dns.tenant_id
+          resourceGroupName: #@ data.values.azure.dns.resource_group
+          hostedZoneName: #@ data.values.azure.dns.hosted_zone
+          environment: AzurePublicCloud
+
+#@ end
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: certmanager-issuer-overlay
+  namespace: #@ data.values.certmanager.namespace
+  annotations:
+    kapp.k14s.io/change-rule: "delete after deleting tap"
+stringData:
+  othersecret.yaml: #@ yaml.encode(clusterissuer())

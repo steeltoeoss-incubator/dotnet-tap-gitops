@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: cnrs-features-config-overlay
+  namespace: tap-install
+  annotations:
+    kapp.k14s.io/change-group: tap/package-overlays
+stringData:
+  cnrs-features-config-overlay.yaml: |
+    #@ load("@ytt:overlay", "overlay")
+    #@overlay/match by=overlay.subset({"metadata":{"name":"config-features"}, "kind": "ConfigMap"})
+    ---
+    data:
+      #@overlay/match missing_ok=True
+      kubernetes.podspec-volumes-emptydir: "enabled"
+

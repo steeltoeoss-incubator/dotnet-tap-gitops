@@ -1,0 +1,23 @@
+#@ load("@ytt:yaml", "yaml")
+
+#@ def learningcenterdependency():
+---
+apiVersion: secretgen.carvel.dev/v1alpha1
+kind: SecretImport
+metadata:
+  name: learningcenter-cert-tls
+  namespace: learningcenter
+spec:
+  fromNamespace: tap-install 
+#@ end
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: learningcenter-config-overlay
+  namespace: tap-install
+  annotations:
+    kapp.k14s.io/change-rule: "delete after deleting tap"
+stringData:
+  learningcenter-config-overlay.yaml: #@ yaml.encode(learningcenterdependency())
