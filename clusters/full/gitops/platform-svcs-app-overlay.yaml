@@ -16,4 +16,3 @@ spec:
         - common/config/tap/learningcenter-overlays
         - common/config/tap/accelerator-overlays
         - common/config/tap/cartographer
-        - common/config/tds
