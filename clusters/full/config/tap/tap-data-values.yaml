@@ -85,7 +85,7 @@ accelerator:
     git:
       url: #@ data.values.git.url
       ref: #@ data.values.git.ref
-      sub_path: clusters/view/app-contents/accelerators
+      sub_path: clusters/full/app-contents/accelerators
       secret_ref: git-creds
 buildservice:
   kp_default_repository: #@ "{}/{}".format(data.values.tap.credentials.registry.host, data.values.tap.credentials.registry.repositories.buildService)
