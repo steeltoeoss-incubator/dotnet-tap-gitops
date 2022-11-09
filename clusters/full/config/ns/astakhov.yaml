@@ -4,14 +4,14 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: cody
+  name: astakhov
   labels:
     networking.knative.dev/enableWildcardCert: "true"
 ---
 apiVersion: kappctrl.k14s.io/v1alpha1
 kind: App
 metadata:
-  name: dev-ns-cody
+  name: dev-ns-astakhov
   namespace: tap-install
   annotations:
     kapp.k14s.io/change-group: dev-namespaces
@@ -34,4 +34,4 @@ spec:
           name: tap-install-gitops
   deploy:
   - kapp: 
-      intoNs: cody
+      intoNs: astakhov
