@@ -115,6 +115,7 @@ excluded_packages:
 - image-policy-webhook.signing.apps.tanzu.vmware.com
 - contour.tanzu.vmware.com
 - cert-manager.tanzu.vmware.com
+- policy.apps.tanzu.vmware.com
 #@ end
 ---
 apiVersion: v1

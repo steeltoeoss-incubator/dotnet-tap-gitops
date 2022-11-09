@@ -17,4 +17,3 @@ spec:
         - common/config/tap/accelerator-overlays
         - common/config/tap/cartographer
         - common/config/tds
-        - common/config/postgres
