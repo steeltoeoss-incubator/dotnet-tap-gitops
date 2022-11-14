@@ -24,8 +24,10 @@ spec:
   description:
     short: It's an external reference to a Sql Server DB!
   pool:
-    group: ""
     kind: secret
+    labelSelector:
+      matchLabels:
+        service: "mssql"
 ---
 apiVersion: services.apps.tanzu.vmware.com/v1alpha1
 kind: ResourceClaimPolicy
@@ -38,4 +40,7 @@ spec:
   subject:
     group: ""
     kind: secret
+    selector: # optional
+      matchLabels:
+        service: "mssql"
 ---

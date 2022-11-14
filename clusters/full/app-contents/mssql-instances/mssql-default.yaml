@@ -5,6 +5,9 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: mssql-default
+  labels: 
+    service: "mssql"
+    claimable: "true"  
 type: Opaque
 stringData:
   host: #@ data.values.tap.services_toolkit.mssql_host
