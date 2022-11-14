@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mssql-default
+type: Opaque
+stringData:
+  host: ad.steeltoe.io
+  database: default
