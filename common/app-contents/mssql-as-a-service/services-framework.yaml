@@ -24,7 +24,7 @@ spec:
   description:
     short: It's an external reference to a Sql Server DB!
   pool:
-    kind: secret
+    kind: Secret
     labelSelector:
       matchLabels:
         service: "mssql"
@@ -39,8 +39,8 @@ spec:
   - '*'
   subject:
     group: ""
-    kind: secret
-    selector: # optional
+    kind: Secret
+    selector:
       matchLabels:
         service: "mssql"
 ---
