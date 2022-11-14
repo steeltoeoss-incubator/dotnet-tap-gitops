@@ -17,3 +17,4 @@ spec:
         - common/config/tap/accelerator-overlays
         - common/config/tap/cartographer
         - common/config/mssql
+        - common/config/ad-run-as

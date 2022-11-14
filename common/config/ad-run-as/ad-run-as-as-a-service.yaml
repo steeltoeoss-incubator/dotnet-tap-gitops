@@ -4,12 +4,11 @@
 apiVersion: kappctrl.k14s.io/v1alpha1
 kind: App
 metadata:
-  name: mssql-instances
+  name: ad-run-as-as-a-service
   namespace: tap-install
   annotations:
-    kapp.k14s.io/change-group: mssql-instances
-    kapp.k14s.io/change-rule.2: "upsert after upserting tap"
-    kapp.k14s.io/change-rule.3: "upsert after upserting mssql-as-a-service"
+    kapp.k14s.io/change-group: ad-run-as-as-a-service
+    kapp.k14s.io/change-rule: "upsert after upserting tap"
 spec:
   serviceAccountName: tap-install-gitops-sa
   syncPeriod: 1m
@@ -22,10 +21,9 @@ spec:
   template:
   - ytt:
       paths:
-      - clusters/full/app-contents/mssql-instances
+      - common/app-contents/ad-run-as-as-a-service
       valuesFrom:
       - secretRef:
           name: tap-install-gitops
   deploy:
-  - kapp: 
-      intoNs: service-instances-mssql
+  - kapp: {}

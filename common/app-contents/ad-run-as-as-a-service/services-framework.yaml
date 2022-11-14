@@ -2,12 +2,12 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: service-instances-mssql
+  name: service-instances-ad-run-as
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: resource-claims-mssql
+  name: resource-claims-ad-run-as
   labels:
     servicebinding.io/controller: "true"
 rules:
@@ -19,21 +19,21 @@ rules:
 apiVersion: services.apps.tanzu.vmware.com/v1alpha1
 kind: ClusterInstanceClass
 metadata:
-  name: mssql
+  name: ad-run-as
 spec:
   description:
-    short: It's an external reference to a Sql Server DB!
+    short: It's an external reference to an Active Directory server!
   pool:
     kind: Secret #! Needs to be singular with first letter capital
     labelSelector:
       matchLabels:
-        service: "mssql"
+        service: "ad-run-as"
 ---
 apiVersion: services.apps.tanzu.vmware.com/v1alpha1
 kind: ResourceClaimPolicy
 metadata:
-  name: mssql-cross-namespace
-  namespace: service-instances-mssql
+  name: ad-run-as-cross-namespace
+  namespace: service-instances-ad-run-as
 spec:
   consumingNamespaces:
   - '*'
@@ -42,5 +42,5 @@ spec:
     kind: Secret #! Needs to be singular with first letter capital
     selector:
       matchLabels:
-        service: "mssql"
+        service: "ad-run-as"
 ---
