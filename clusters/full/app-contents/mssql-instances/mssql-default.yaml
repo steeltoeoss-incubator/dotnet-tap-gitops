@@ -1,8 +1,11 @@
+#@ load("@ytt:data", "data")
+
+---
 apiVersion: v1
 kind: Secret
 metadata:
   name: mssql-default
 type: Opaque
 stringData:
-  host: ad.steeltoe.io
+  host: #@ data.values.tap.services_toolkit.mssql_host
   database: default
