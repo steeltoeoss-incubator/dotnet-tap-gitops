@@ -13,4 +13,6 @@ stringData:
     data:
       #@overlay/match missing_ok=True
       kubernetes.podspec-volumes-emptydir: "enabled"
+      #@overlay/match missing_ok=True
+      kubernetes.podspec-fieldref: "enabled"
 
