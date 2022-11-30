@@ -15,7 +15,6 @@ deployment:
     - --source=contour-httpproxy
     - --policy=upsert-only
     - --provider=google
-    - --policy=upsert-only #! would prevent ExternalDNS from deleting any records, omit to enable full synchronization
     - #@ "--google-project=" + data.values.google.dns.project_id
     - --registry=txt
   env:
