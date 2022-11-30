@@ -2,24 +2,24 @@
 #@ load("@ytt:data", "data")
 #@ load("@ytt:yaml", "yaml")
 
-#@ def azurednssecret():
+#@ def googlednssecret():
 ---
 apiVersion: v1
 kind: Secret
 metadata:
-  name: azure-config-file
+  name: gcloud-service-account-credentials
   namespace: tanzu-system-service-discovery
 stringData:
-  external-dns-config.json: #@ data.values.azure.dns.config
+  credentials.json: #@ data.values.google.dns.config
 #@ end
 
 ---
 apiVersion: v1
 kind: Secret
 metadata:
-  name: azure-dns-secret-overlay
+  name: google-dns-secret-overlay
   namespace: #@ data.values.external_dns.namespace
   annotations:
     kapp.k14s.io/change-rule: "delete after deleting tap"
 stringData:
-  othersecret.yaml: #@ yaml.encode(azurednssecret())
+  othersecret.yaml: #@ yaml.encode(googlednssecret())

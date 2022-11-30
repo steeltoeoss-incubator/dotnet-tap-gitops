@@ -6,10 +6,10 @@
 apiVersion: v1
 kind: Secret
 metadata:
-  name: azure-dns-client-secret
+  name: google-dns-client-secret
   namespace: cert-manager
 stringData:
-  client-secret: #@ data.values.azure.dns.client_secret
+  client-secret: #@ data.values.google.dns.config
 ---
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
@@ -17,24 +17,17 @@ metadata:
   name: letsencrypt-contour-cluster-issuer
 spec:
   acme:
-    email: "platform-ops@pivotal.io"
+    email: #@ data.values.tap.credentials.tanzuNet.username
     privateKeySecretRef:
       name: acme-account-key
     server: https://acme-v02.api.letsencrypt.org/directory
-    #! server: https://acme-staging-v02.api.letsencrypt.org/directory
     solvers:
     - dns01:
-        azureDNS:
-          clientID: #@ data.values.azure.dns.client_id
-          clientSecretSecretRef:
-            name: azure-dns-client-secret
-            key: client-secret
-          subscriptionID: #@ data.values.azure.dns.subscription_id
-          tenantID: #@ data.values.azure.dns.tenant_id
-          resourceGroupName: #@ data.values.azure.dns.resource_group
-          hostedZoneName: #@ data.values.azure.dns.hosted_zone
-          environment: AzurePublicCloud
-
+        cloudDNS:
+          project: #@ data.values.google.dns.project_id
+          serviceAccountSecretRef:
+            name: gcloud-dns-service-account
+            key: credentials.json
 #@ end
 ---
 apiVersion: v1

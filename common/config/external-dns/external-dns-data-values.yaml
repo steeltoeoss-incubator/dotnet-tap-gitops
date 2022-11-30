@@ -9,24 +9,28 @@ namespace: #@ data.values.external_dns.target_namespace
 
 deployment:
   args:
+    - --metrics-address=:7979 #! ensures external dns exposes metrics
     - --source=service
     - --source=ingress
     - --source=contour-httpproxy
     - --policy=upsert-only
-    - --provider=azure
-    - #@ "--azure-resource-group=" + data.values.azure.dns.resource_group
+    - --provider=google
+    - --policy=upsert-only #! would prevent ExternalDNS from deleting any records, omit to enable full synchronization
+    - #@ "--google-project=" + data.values.google.dns.project_id
     - --registry=txt
+  env:
+  - name: GOOGLE_APPLICATION_CREDENTIALS
+    value: /etc/secrets/service-account/credentials.json
   volumeMounts:
-    - name: azure-config-file
-      mountPath: /etc/kubernetes
-      readOnly: true
+  - name: google-service-account
+    mountPath: /etc/secrets/service-account/
   volumes:
-    - name: azure-config-file
-      secret:
-        secretName: azure-config-file
-        items:
-          - key: external-dns-config.json
-            path: azure.json
+  - name: google-service-account
+    secret:
+      secretName: gcloud-service-account-credentials
+      items:
+      - key: credentials.json
+        path: credentials.json
 #@ end
 ---
 apiVersion: v1

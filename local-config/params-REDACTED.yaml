@@ -1,17 +1,12 @@
 ---
 common:
-  azure:
+  google:
     dns:
       #! TODO: Resolve duplicate information below.  Left this way for simplicity for now.
       config: '{"tenantId": "REDACTED","subscriptionId": "REDACTED","resourceGroup": "tkg-lab-dns","aadClientId": "REDACTED","aadClientSecret": "REDACTED"}'
-      resource_group: tkg-lab-dns
-      client_id: REDACTED
-      client_secret: REDACTED
-      subscription_id: REDACTED
-      tenant_id: REDACTED
-      hosted_zone: REDACTED
+      project_id: REDACTED
   git:
-    url: https://dev.azure.com/doddatvmware/tap-lab/_git/gitops-platform
+    url: https://github.com/steeltoeoss-incubator/dotnet-tap-gitops
     ref: origin/main
   tap:
     tanzunet:
@@ -19,6 +14,7 @@ common:
       password: REDACTED
     registry:
       host: REDACTED
+      path: REDACTED
       username: REDACTED
       password: REDACTED
     org_name: Acme Co
@@ -27,11 +23,6 @@ common:
       host: dev.azure.com
       basic_auth_username: REDACTED
       basic_auth_password: REDACTED
-  sso:
-    github:
-      #! following this guide: https://github.com/pivotal/docs-tap/pull/1535/files
-      client_id: REDACTED
-      client_secret: REDACTED
   ca: |
     -----BEGIN CERTIFICATE-----
     REDACTED
@@ -41,12 +32,8 @@ clusters:
   full:
     cluster_name: tap-full
     enabled: false
-    catalog: https://dev.azure.com/doddatvmware/tap-lab/_git/software-catalog?path=/catalog-info.yaml
+    catalog: https://github.com/steeltoeoss-incubator/dotnet-tap-software-catalog/blob/main/catalog-info.yaml
     catalog_token: REDACTED
-    domain: dotnet-tap.tanzu-azure-lab.winterfell.fun
+    domain: REDACTED
     tap_gui:
       allow_guest_access: true
-      azure_auth:
-        client_id: REDACTED
-        client_secret: REDACTED
-        tenant_id: REDACTED

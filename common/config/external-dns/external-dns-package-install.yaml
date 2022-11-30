@@ -10,7 +10,7 @@ metadata:
   annotations:
     kapp.k14s.io/change-group: external-dns
     kapp.k14s.io/change-rule: "delete after deleting tap"
-    ext.packaging.carvel.dev/ytt-paths-from-secret-name.1: azure-dns-secret-overlay
+    ext.packaging.carvel.dev/ytt-paths-from-secret-name.1: google-dns-secret-overlay
 spec:
   packageRef:
     refName: external-dns.tanzu.vmware.com
