@@ -97,7 +97,7 @@ supply_chain: basic
 ootb_supply_chain_basic:
   registry:
     server: #@ data.values.tap.credentials.registry.host
-    repository: #@ data.values.tap.credentials.registry.path + / + data.values.tap.credentials.registry.repositories.ootbSupplyChain
+    repository: #@ data.values.tap.credentials.registry.path + '/' + data.values.tap.credentials.registry.repositories.ootbSupplyChain
   git_implementation: libgit2
 package_overlays:
 - name:  learningcenter
