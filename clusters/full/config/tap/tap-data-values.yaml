@@ -88,7 +88,7 @@ accelerator:
       sub_path: clusters/full/app-contents/accelerators
       secret_ref: git-creds
 buildservice:
-  kp_default_repository: #@ "{}/{}".format(data.values.tap.credentials.registry.host, data.values.tap.credentials.registry.repositories.buildService)
+  kp_default_repository: #@ "{}/{}/{}".format(data.values.tap.credentials.registry.host, data.values.tap.credentials.registry.path, data.values.tap.credentials.registry.repositories.buildService)
   kp_default_repository_username: #@ data.values.tap.credentials.registry.username
   kp_default_repository_password: #@ data.values.tap.credentials.registry.password
   tanzunet_username: #@ data.values.tap.credentials.tanzuNet.username
