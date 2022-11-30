@@ -9,7 +9,7 @@ metadata:
   name: google-dns-client-secret
   namespace: cert-manager
 stringData:
-  client-secret: #@ data.values.google.dns.config
+  credentials.json: #@ data.values.google.dns.config
 ---
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
@@ -26,7 +26,7 @@ spec:
         cloudDNS:
           project: #@ data.values.google.dns.project_id
           serviceAccountSecretRef:
-            name: gcloud-dns-service-account
+            name: google-dns-client-secret
             key: credentials.json
 #@ end
 ---
