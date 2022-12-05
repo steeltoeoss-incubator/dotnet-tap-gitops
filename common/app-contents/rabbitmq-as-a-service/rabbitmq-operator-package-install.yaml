@@ -1,0 +1,24 @@
+#@ load("@ytt:data", "data")
+
+---
+apiVersion: packaging.carvel.dev/v1alpha1
+kind: PackageInstall
+metadata:
+  name: rabbitmq-operator
+  namespace: tap-install
+  annotations:
+    kapp.k14s.io/change-group: rabbitmq-operator
+    kapp.k14s.io/change-rule.0: "upsert after upserting rabbitmq-repo"
+    kapp.k14s.io/change-rule.1: "upsert after upserting cert-manager"
+spec:
+  packageRef:
+    refName: rabbitmq.tanzu.vmware.com
+    versionSelection:
+      constraints: #@ data.values.rabbitmq_operator.version
+      prereleases: {}
+  serviceAccountName: tap-install-gitops-sa
+  values:
+  - secretRef:
+      name: rabbitmq-operator-values
+
+

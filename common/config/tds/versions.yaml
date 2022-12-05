@@ -1,0 +1,7 @@
+#@data/values
+
+#@overlay/match-child-defaults missing_ok=True
+---
+tds:
+  version: "1.1.0"
+  namespace: tap-install
