@@ -6,7 +6,7 @@ spec:
   #@overlay/match by=overlay.all, expects="1+"
   - ytt:
       #@overlay/match missing_ok=True
-      paths: 
+      paths:
         - clusters/full/config
         - common/config/external-dns
         - common/config/cert-manager
@@ -16,3 +16,6 @@ spec:
         - common/config/tap/learningcenter-overlays
         - common/config/tap/accelerator-overlays
         - common/config/tap/cartographer
+        - common/config/tds
+        - common/config/postgres
+        - common/config/rabbitmq
