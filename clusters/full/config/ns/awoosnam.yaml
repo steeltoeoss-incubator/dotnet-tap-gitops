@@ -1,0 +1,37 @@
+#@ load("@ytt:data", "data")
+
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: awoosnam
+  labels:
+    networking.knative.dev/enableWildcardCert: "true"
+---
+apiVersion: kappctrl.k14s.io/v1alpha1
+kind: App
+metadata:
+  name: dev-ns-awoosnam
+  namespace: tap-install
+  annotations:
+    kapp.k14s.io/change-group: dev-namespaces
+    kapp.k14s.io/change-rule: "upsert after upserting tap"
+spec:
+  serviceAccountName: tap-install-gitops-sa
+  syncPeriod: 1m
+  fetch:
+  - git:
+      url: #@ data.values.git.url
+      ref: #@ data.values.git.ref
+      secretRef:
+        name: git-creds-carvel
+  template:
+  - ytt:
+      paths:
+      - common/app-contents/dev-namespace
+      valuesFrom:
+      - secretRef:
+          name: tap-install-gitops
+  deploy:
+  - kapp:
+      intoNs: awoosnam
