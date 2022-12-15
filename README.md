@@ -9,3 +9,17 @@ Repo for the GitOps deployment of TAP for the DotNet TSL team.
 1. Login to [Tanzu Mission Control](https://devecosystems.tmc.cloud.vmware.com/) (TMC). _Ensure your organization is set to "Dev Ecosystems."_
 1. Go to the [dotnet-tap-springapps](https://devecosystems.tmc.cloud.vmware.com/clusters/dotnet-tap-springapps/attached/attached/overview) cluster. In the upper right, below your name, select *Actions -> Access this cluster* and follow directions.
 1. Go to the [dotnet-experience-containers](https://console.cloud.google.com/artifacts/docker/dotnet-developer-experience/us-central1/dotnet-experience-containers?project=dotnet-developer-experience), select _SETUP INSTRUCTIONS_ and follow directions.
+
+## Adding an App Accelerator
+
+This example adds an accelerator that:
+* is in the repo: `https://github.com/ccheetham/application-accelerator-samples.git`
+* is in the repo subpath: `weatherforecast-steeltoe/`
+* is in the repo branch: `feat/steeltoe-upkeep`
+
+```
+$ tanzu accelerator create weatherforecast-dev \
+    --git-repository https://github.com/ccheetham/application-accelerator-samples.git \
+    --git-sub-path weatherforecast-steeltoe \
+    --git-branch feat/steeltoe-upkeep
+```
