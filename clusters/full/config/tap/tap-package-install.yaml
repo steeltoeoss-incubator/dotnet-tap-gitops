@@ -13,7 +13,7 @@ metadata:
     kapp.k14s.io/change-rule.2: "upsert after upserting external-dns"
     kapp.k14s.io/change-rule.3: "upsert after upserting contour"
     kapp.k14s.io/change-rule.4: "upsert after upserting cert-manager-config/app"
-    
+
 spec:
   packageRef:
     refName: tap.tanzu.vmware.com
