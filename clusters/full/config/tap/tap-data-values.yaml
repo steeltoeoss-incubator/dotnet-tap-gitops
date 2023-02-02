@@ -7,19 +7,66 @@
 #! installed_for_vmware_internal_use: true
 profile: full
 ceip_policy_disclosed: true #! Installation fails if this is set to 'false'
-contour:
-  envoy:
-    service:
-      type: LoadBalancer
-learningcenter:
-  ingressSecret: 
-    secretName: learningcenter-cert-tls
-shared:
-  ingress_domain: #@ data.values.tap.domains.base
-appsso:
-  domain_template: "{{.Name}}.{{.Domain}}"
+accelerator:
+  ingress:
+    enable_tls: true
+    include: true #! This should be able to be removed since I have shared.ingress_domain set above.  All others work, but for accelerator I had to explicitly set this
+  tls:
+    namespace: tap-install
+    secret_name: wildcard-cert-tls
+  managed_resources:
+    enable: true
+    git:
+      url: #@ data.values.git.url
+      ref: #@ data.values.git.ref
+      sub_path: clusters/full/app-contents/accelerators
+      secret_ref: git-creds
 api_auto_registration:
   cluster_name: #@ data.values.tap.cluster_name
+appliveview:
+  tls:
+    namespace: tap-install
+    secretName: wildcard-cert-tls
+appsso:
+  domain_template: "{{.Name}}.{{.Domain}}"
+buildservice:
+  kp_default_repository: #@ "{}/{}/{}".format(data.values.tap.credentials.registry.host, data.values.tap.credentials.registry.path, data.values.tap.credentials.registry.repositories.buildService)
+  kp_default_repository_username: #@ data.values.tap.credentials.registry.username
+  kp_default_repository_password: #@ data.values.tap.credentials.registry.password
+  tanzunet_username: #@ data.values.tap.credentials.tanzuNet.username
+  tanzunet_password: #@ data.values.tap.credentials.tanzuNet.password
+cnrs:
+  namespace_selector: '{"matchExpressions": [{"key":"networking.knative.dev/enableWildcardCert", "operator": "In", "values":["true"]}]}'
+excluded_packages:
+- image-policy-webhook.signing.apps.tanzu.vmware.com
+- contour.tanzu.vmware.com
+- cert-manager.tanzu.vmware.com
+- policy.apps.tanzu.vmware.com
+learningcenter:
+  ingressSecret:
+    secretName: learningcenter-cert-tls
+metadata_store:
+  app_service_type: ClusterIP
+ootb_supply_chain_basic:
+  registry:
+    server: #@ data.values.tap.credentials.registry.host
+    repository: #@ data.values.tap.credentials.registry.path + '/' + data.values.tap.credentials.registry.repositories.ootbSupplyChain
+  git_implementation: libgit2
+package_overlays:
+- name:  learningcenter
+  secrets:
+  - name: learningcenter-config-overlay
+- name:  accelerator
+  secrets:
+  - name: accelerator-config-overlay
+shared:
+  ingress_domain: #@ data.values.tap.domains.base
+  ingress_issuer: letsencrypt-contour-cluster-issuer
+  image_registry:
+    project_path: #@ data.values.tap.credentials.registry.host + "/tap"
+    username: #@ data.values.tap.credentials.registry.username
+    password: #@ data.values.tap.credentials.registry.password
+supply_chain: basic
 tap_gui:
   service_type: ClusterIP
   tls:
@@ -65,57 +112,8 @@ tap_gui:
       azure:
       - host: dev.azure.com
         token: #@ data.values.tap.catalog_token
-appliveview:
-  tls:
-    namespace: tap-install
-    secretName: wildcard-cert-tls
-metadata_store:
-  app_service_type: ClusterIP
-accelerator:
-  server:
-    service_type: LoadBalancer #! Explicitly setting this becuase because of sporatic issue with VS code plugin and the let's encrypt certificate when accessing via ingress
-  ingress:
-    enable_tls: true
-    include: true #! This should be able to be removed since I have shared.ingress_domain set above.  All others work, but for accelerator I had to explicitly set this
-  tls:
-    namespace: tap-install
-    secret_name: wildcard-cert-tls
-  managed_resources:
-    enable: true
-    git:
-      url: #@ data.values.git.url
-      ref: #@ data.values.git.ref
-      sub_path: clusters/full/app-contents/accelerators
-      secret_ref: git-creds
-buildservice:
-  kp_default_repository: #@ "{}/{}/{}".format(data.values.tap.credentials.registry.host, data.values.tap.credentials.registry.path, data.values.tap.credentials.registry.repositories.buildService)
-  kp_default_repository_username: #@ data.values.tap.credentials.registry.username
-  kp_default_repository_password: #@ data.values.tap.credentials.registry.password
-  tanzunet_username: #@ data.values.tap.credentials.tanzuNet.username
-  tanzunet_password: #@ data.values.tap.credentials.tanzuNet.password
-supply_chain: basic
-ootb_supply_chain_basic:
-  registry:
-    server: #@ data.values.tap.credentials.registry.host
-    repository: #@ data.values.tap.credentials.registry.path + '/' + data.values.tap.credentials.registry.repositories.ootbSupplyChain
-  git_implementation: libgit2
-package_overlays:
-- name:  learningcenter
-  secrets:
-  - name: learningcenter-config-overlay
-- name: cnrs
-  secrets:
-  - name: cnrs-network-config-overlay
-  - name: cnrs-certmanager-config-overlay
-  - name: cnrs-features-config-overlay
-- name:  accelerator
-  secrets:
-  - name: accelerator-config-overlay
-excluded_packages:
-- image-policy-webhook.signing.apps.tanzu.vmware.com
-- contour.tanzu.vmware.com
-- cert-manager.tanzu.vmware.com
-- policy.apps.tanzu.vmware.com
+tap_telemetry:
+  installed_for_vmware_internal_use: "true"
 #@ end
 ---
 apiVersion: v1
