@@ -42,7 +42,7 @@ spec:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: tap-registry
+  name: registries-credentials
   namespace: postgres-service-instances
   annotations:
     secretgen.carvel.dev/image-pull-secret: ""

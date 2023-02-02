@@ -3,5 +3,5 @@
 #@overlay/match-child-defaults missing_ok=True
 ---
 rabbitmq_operator:
-  version: "1.3.2"
+  version: "1.4.0"
   namespace: tap-install

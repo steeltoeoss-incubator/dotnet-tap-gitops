@@ -9,6 +9,15 @@ metadata:
   namespace: tap-gui
   name: tap-gui-viewer
 ---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: tap-gui-viewer
+  namespace: tap-gui
+  annotations:
+    kubernetes.io/service-account.name: tap-gui-viewer
+type: kubernetes.io/service-account-token
+---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
@@ -104,4 +113,4 @@ rules:
   verbs: ['get', 'watch', 'list']
 - apiGroups: [ 'batch' ]
   resources: [ 'jobs', 'cronjobs' ]
-  verbs: [ 'get', 'watch', 'list' ]  
+  verbs: [ 'get', 'watch', 'list' ]

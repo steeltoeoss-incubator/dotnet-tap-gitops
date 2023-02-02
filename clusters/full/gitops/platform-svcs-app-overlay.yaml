@@ -12,7 +12,6 @@ spec:
         - common/config/cert-manager
         - common/config/contour
         - common/config/tap/base
-        - common/config/tap/cnrs-overlays
         - common/config/tap/learningcenter-overlays
         - common/config/tap/accelerator-overlays
         - common/config/tap/cartographer

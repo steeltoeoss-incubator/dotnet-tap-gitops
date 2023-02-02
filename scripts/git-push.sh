@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 GIT_MESSAGE=$1
-if [ -z $GIT_MESSAGE ]
+if [ -z "$GIT_MESSAGE" ]
 then
     GIT_MESSAGE=YOLO
 fi

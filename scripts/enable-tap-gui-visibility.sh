@@ -19,7 +19,7 @@ yq e -i '.clusters.view.tap_gui.'$ADJUSTED_CLUSTER_NAME'.api_server_url = env(AP
 export API_SERVER_CA=$(kubectl config view --minify --flatten -o jsonpath='{.clusters[0].cluster.certificate-authority-data}')
 yq e -i '.clusters.view.tap_gui.'$ADJUSTED_CLUSTER_NAME'.api_server_ca = env(API_SERVER_CA)' $PARAMS_YAML
 
-export SA_TOKEN=$(kubectl -n tap-gui get secret $(kubectl -n tap-gui get sa tap-gui-viewer -o=json | jq -r '.secrets[0].name') -o=json | jq -r '.data["token"]' | base64 --decode)
+export SA_TOKEN=$(kubectl -n tap-gui get secret tap-gui-viewer -o=json | jq -r '.data["token"]' | base64 --decode)
 yq e -i '.clusters.view.tap_gui.'$ADJUSTED_CLUSTER_NAME'.sa_token = env(SA_TOKEN)' $PARAMS_YAML
 
 echo "View cluster config updated, now you have to apply updates"

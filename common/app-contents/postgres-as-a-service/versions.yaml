@@ -3,5 +3,5 @@
 #@overlay/match-child-defaults missing_ok=True
 ---
 postgres_operator:
-  version: "1.8.0"
+  version: "1.9.1"
   namespace: tap-install
