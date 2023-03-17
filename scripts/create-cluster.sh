@@ -1,11 +1,21 @@
 #!/usr/bin/env bash
 
+cluster=$(basename $0)
+echo -n "create cluster $cluster? "
+read response
+response=${response^^}
+[[ "$response" == "Y" ]] || [[ "$response" == "YES" ]] || exit
+echo creating cluster $cluster
+echo
+
+cluster_version="1.25.6-gke.1000"
+
 gcloud beta container \
-  clusters create "dotnet-devx-tap-blue" \
+  clusters create "$cluster" \
   --project "dotnet-developer-experience" \
   --zone "us-central1-c" \
   --no-enable-basic-auth \
-  --cluster-version "1.24.8-gke.2000" \
+  --cluster-version "$cluster_version" \
   --release-channel "regular" \
   --machine-type "e2-standard-4" \
   --image-type "COS_CONTAINERD" \
